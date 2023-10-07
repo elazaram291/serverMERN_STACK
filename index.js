@@ -23,23 +23,24 @@ app.get('/test', (req, res) => {
     res.json('test ok');
 });
 
-app.post('/register', async (res, req) => {
+app.post('/register', async ( req,res) => {
+    console.log(req)
     const { name, email, password } = req.body;
     try {
         const user = await UserModel.create({
             name,
             email,
             password: bcrypt.hashSync(password, bcryptSalt),
-        })
+        });
         console.log(user, "api")
         res.json(user);
     }catch (e) {
-        res.statusCode(422).json(e);
+         res.status(422).json(e);
     }
 })
 
 
-app.post('login',async (req,res) => {
+app.post('/login',async (req,res) => {
     const {email , password} = req.body;
     const user = await UserModel.findOne({email})
     if (user) {
@@ -47,10 +48,10 @@ app.post('login',async (req,res) => {
         if(passOk){
             jwt.sign({email:user.email, id:user._id},jwtSecret,{},(err,token) => {
                 if(err) throw err;
-                res.cookie('token',token).json('pass Ok')
+                res.cookie('token',token).json(user)
             })
         }else{
-            res.json('pass not Ok')
+            res.status(422).json('pass not Ok')
         }
         res.json('found');
     }else{
@@ -60,3 +61,4 @@ app.post('login',async (req,res) => {
 
 console.log('hi')
 app.listen(3001);
+
