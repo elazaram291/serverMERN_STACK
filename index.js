@@ -20,11 +20,10 @@ mongoose.connect(process.env.MONGO_URL)
 
 
 app.get('/test', (req, res) => {
-    res.json('test ok');
+    res.json('test ok ...');
 });
 
 app.post('/register', async ( req,res) => {
-    console.log(req)
     const { name, email, password } = req.body;
     try {
         const user = await UserModel.create({
@@ -32,7 +31,6 @@ app.post('/register', async ( req,res) => {
             email,
             password: bcrypt.hashSync(password, bcryptSalt),
         });
-        console.log(user, "api")
         res.json(user);
     }catch (e) {
          res.status(422).json(e);
@@ -59,7 +57,7 @@ app.post('/login',async (req,res) => {
     }
 })
 
-console.log('hi')
+
 app.listen(3001);
 
 // hhhhhhh
